@@ -48,7 +48,7 @@ architecture Behavioral of Telemetre_IP is
         if y < 0 then
             y := 0;
         elsif y > MAX_DISTANCE_CM then
-            y := MAX_DISTANCE_CM;
+            y := 0;
         end if;
         return to_unsigned(y, 10);
     end function;

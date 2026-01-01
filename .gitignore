@@ -1,0 +1,27 @@
+*.awf
+work/
+*.wlf
+
+*.bak
+*.log
+incremental_db/
+db/
+
+#Eclipse Project files
+software/*.elf
+software/*.map
+software/*.objdump
+software/*.o
+software/*.d
+#Eclipse BPS project files
+software/*_bps/obj/*
+
+*.zip
+
+db/
+incremental_db/
+output_files/
+simulation/
+*.v.bak
+*.bak
+*.rpt

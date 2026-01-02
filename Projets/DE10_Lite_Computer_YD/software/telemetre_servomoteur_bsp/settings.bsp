@@ -2,10 +2,10 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>02/01/2026 23:08:28</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1767391708039</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Jan 2, 2026 11:12:20 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1767391940383</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Labs\systemes\PROJETO_FINAL\FPGA-Ultrasonic-2D-Radar\Projets\DE10_Lite_Computer_YD\software\telemetre_servomoteur_bsp</BspGeneratedLocation>
-        <BspSettingsFile>.\settings.bsp</BspSettingsFile>
+        <BspSettingsFile>C:\Labs\systemes\PROJETO_FINAL\FPGA-Ultrasonic-2D-Radar\Projets\DE10_Lite_Computer_YD\software\telemetre_servomoteur_bsp\settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\Computer_System.sopcinfo</SopcDesignFile>
         <JdiFile>default</JdiFile>
         <Cpu>Nios2</Cpu>

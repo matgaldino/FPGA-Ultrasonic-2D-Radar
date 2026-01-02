@@ -33,7 +33,7 @@ architecture Behavioral of Telemetre_IP_Avalon_TB is
     signal chipselect_tb : std_logic := '0';
     signal readdata_tb   : std_logic_vector(31 downto 0);
 
-    constant CLK_PERIOD : time := 20 ns;
+    constant CLK_PERIOD : time := 10 ns;
 
     constant ECHO_TIME_20  : time := 1160 us;
     constant ECHO_TIME_100 : time := 5800 us;

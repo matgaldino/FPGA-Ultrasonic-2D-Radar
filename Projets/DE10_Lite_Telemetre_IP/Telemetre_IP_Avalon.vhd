@@ -24,7 +24,10 @@ architecture Behavioral of Telemetre_IP_Avalon is
 begin
 
     Telemetre_core : entity work.Telemetre_IP
-        port map (
+        generic map (
+			CLK_FREQ_HZ => 100_000_000
+		)
+		port map (
             clk     => clk,
             Rst_n   => Rst_n,
             echo    => echo,

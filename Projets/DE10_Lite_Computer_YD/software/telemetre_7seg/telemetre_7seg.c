@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include "system.h"
 #include "io.h"
-#include "alt_types.h"
 #include "unistd.h"
 
 /* 7-seg LUT (active-high segments).
@@ -24,36 +23,28 @@ static const uint8_t SEG7_LUT[10] = {
 
 static inline uint8_t seg7(uint8_t digit)
 {
-    return (digit < 10) ? SEG7_LUT[digit] : 0x00;
+    return (digit < 10u) ? SEG7_LUT[digit] : 0x00u;
 }
 
 int main(void)
 {
     printf("\n========================================\n");
     printf("   ULTRASONIC TELEMETRE - NIOS II\n");
-    printf("   (real distance = raw / 2)\n");
+    printf("   (distance in cm from Avalon)\n");
     printf("========================================\n\n");
 
     while (1)
     {
-        /* 1) Read the Avalon peripheral (LSBs contain the distance code). */
-        const uint32_t raw_value = IORD_32DIRECT(TELEMETRE_0_BASE, 0);
-        const uint32_t dist_raw  = raw_value & 0x3FFu;
+        /* 1) Read the Avalon peripheral (LSBs contain distance in cm). */
+        const uint32_t raw_value   = IORD_32DIRECT(TELEMETRE_0_BASE, 0);
+        uint32_t distance_cm       = raw_value & 0x3FFu;   /* [9:0] */
 
-        /* 2) Apply scaling if your system returns a doubled value. */
-        uint32_t distance_cm = dist_raw / 2u;
-
-        /* 3) Clamp to 0..999 for display formatting. */
-        if (distance_cm > 999u) {
-            distance_cm = 999u;
-        }
-
-        /* 4) Split into decimal digits. */
+        /* 3) Split into decimal digits. */
         const uint8_t u = (uint8_t)( distance_cm        % 10u);
         const uint8_t t = (uint8_t)((distance_cm / 10u) % 10u);
         const uint8_t h = (uint8_t)((distance_cm / 100u) % 10u);
 
-        /* 5) Pack HEX0..HEX2 into the lower 24 bits of HEX3_HEX0. */
+        /* 4) Pack HEX0..HEX2 into the lower 24 bits of HEX3_HEX0. */
         const uint32_t hex_low =
             ((uint32_t)seg7(u) << 0)  |
             ((uint32_t)seg7(t) << 8)  |
@@ -61,9 +52,8 @@ int main(void)
 
         IOWR_32DIRECT(HEX3_HEX0_BASE, 0, hex_low);
 
-        /* 6) Optional UART debug. */
-        printf("raw=%lu  ->  distance=%lu cm\n",
-               (unsigned long)dist_raw,
+        /* 5) Optional UART debug. */
+        printf("distance=%lu cm\n",
                (unsigned long)distance_cm);
 
         usleep(60000); /* 60 ms */

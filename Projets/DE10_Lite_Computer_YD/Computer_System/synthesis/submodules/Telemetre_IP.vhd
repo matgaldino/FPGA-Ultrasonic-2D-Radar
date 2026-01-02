@@ -23,7 +23,7 @@ architecture Behavioral of Telemetre_IP is
     constant MEASURE_PERIOD_MS     : integer := 60;
     constant MEASURE_PERIOD_CYCLES : integer := (CLK_FREQ_HZ / 1000) * MEASURE_PERIOD_MS;
 
-    constant CYCLES_PER_CM         : integer := 2900;
+    constant CYCLES_PER_CM         : integer := ( (CLK_FREQ_HZ / 1_000_000) * 58 ) + ( ((CLK_FREQ_HZ mod 1_000_000) * 58 + 500_000) / 1_000_000 );
     constant MAX_DISTANCE_CM       : integer := 400;
 
     type state_t is (IDLE, TRIG_PULSE, WAIT_ECHO, MEASURE_ECHO, WAIT_BETWEEN);
@@ -31,9 +31,9 @@ architecture Behavioral of Telemetre_IP is
 
     signal trig_r : std_logic := '0';
 
-    signal trig_cnt   : unsigned(9 downto 0)  := (others => '0');
+    signal trig_cnt   : unsigned(12 downto 0) := (others => '0');
     signal echo_cnt   : unsigned(21 downto 0) := (others => '0');
-    signal period_cnt : unsigned(21 downto 0) := (others => '0');
+    signal period_cnt : unsigned(22 downto 0) := (others => '0');
 
     signal dist_r : unsigned(9 downto 0) := (others => '0');
 

@@ -25,7 +25,7 @@ begin
 
     Telemetre_core : entity work.Telemetre_IP
         generic map (
-			CLK_FREQ_HZ => 100_000_0000
+			CLK_FREQ_HZ => 100_000_000
 		)
 		port map (
             clk     => clk,

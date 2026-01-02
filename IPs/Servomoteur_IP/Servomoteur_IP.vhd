@@ -3,6 +3,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity Servomoteur_IP is
+    generic (
+        CLK_FREQ_HZ : integer := 50_000_000
+    );
     port (
         clk      : in  std_logic;
         Rst_n    : in  std_logic;
@@ -11,12 +14,12 @@ entity Servomoteur_IP is
     );
 end entity Servomoteur_IP;
 
+
 architecture Behavioral of Servomoteur_IP is
 
-    constant CLK_FREQ    : integer := 50_000_000;
-    constant PERIOD_20MS : integer := CLK_FREQ / 50;
-    constant PULSE_MIN   : integer := CLK_FREQ / 1850;
-    constant PULSE_MAX   : integer := CLK_FREQ / 458;
+    constant PERIOD_20MS : integer := CLK_FREQ_HZ / 50;
+    constant PULSE_MIN   : integer := CLK_FREQ_HZ / 1850;
+    constant PULSE_MAX   : integer := CLK_FREQ_HZ / 458;
 
     signal counter     : integer := 0;
     signal pulse_width : integer := PULSE_MIN;

@@ -3,6 +3,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 entity Servomoteur_IP_Avalon is
+    generic (
+        CLK_FREQ_HZ : integer := 100_000_000
+    );
     port (
         clk        : in  std_logic;
         reset_n    : in  std_logic;
@@ -15,6 +18,7 @@ entity Servomoteur_IP_Avalon is
     );
 end entity Servomoteur_IP_Avalon;
 
+
 architecture Behavioral of Servomoteur_IP_Avalon is
 
     signal position_reg : std_logic_vector(9 downto 0) := (others => '0');
@@ -22,12 +26,15 @@ architecture Behavioral of Servomoteur_IP_Avalon is
 begin
 
     ServoCore : entity work.Servomoteur_IP
-        port map (
-            clk      => clk,
-            Rst_n    => reset_n,
-            position => position_reg,
-            commande => commande
-        );
+		generic map (
+			CLK_FREQ_HZ => CLK_FREQ_HZ
+		)
+		port map (
+			clk      => clk,
+			Rst_n    => reset_n,
+			position => position_reg,
+			commande => commande
+		);
 
     process(clk, reset_n)
     begin

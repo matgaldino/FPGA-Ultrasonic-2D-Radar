@@ -25,7 +25,7 @@ architecture sim of Servomoteur_IP_Avalon_TB is
     signal writedata_tb  : std_logic_vector(31 downto 0) := (others => '0');
     signal commande_tb   : std_logic;
 
-    constant CLK_PERIOD : time := 20 ns;
+    constant CLK_PERIOD : time := 10 ns;
 
 begin
 

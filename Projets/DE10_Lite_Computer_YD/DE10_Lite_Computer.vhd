@@ -72,11 +72,14 @@ architecture Behavioral of DE10_Lite_Computer is
 	signal telemetre_readdata : std_logic_vector(9 downto 0);
     signal telemetre_echo     : std_logic;
     signal telemetre_trig     : std_logic;
+	
+	signal servo_commande     : std_logic;
 	 
 	  component Computer_System is
         port (
             arduino_gpio_export         : inout std_logic_vector(15 downto 0) := (others => 'X'); -- export
             arduino_reset_n_export      : out   std_logic;                                        -- export
+			
             hex3_hex0_export            : out   std_logic_vector(31 downto 0);                    -- export
             hex5_hex4_export            : out   std_logic_vector(15 downto 0);                    -- export
             leds_export                 : out   std_logic_vector(9 downto 0);                     -- export
@@ -109,9 +112,11 @@ architecture Behavioral of DE10_Lite_Computer is
             video_pll_ref_clk_clk       : in    std_logic                     := 'X';             -- clk
             video_pll_ref_reset_reset   : in    std_logic                     := 'X';             -- reset
 			
-			uart_out_readdata          : out   std_logic_vector(9 downto 0);  
-            uart_out_echo              : in    std_logic := 'X';
-            uart_out_trig              : out   std_logic
+			uart_out_readdata          	: out   std_logic_vector(9 downto 0);  
+            uart_out_echo              	: in    std_logic := 'X';
+            uart_out_trig              	: out   std_logic;
+			
+			servo_out_commande			: out	std_logic
         );
     end component Computer_System;
 	 
@@ -129,61 +134,54 @@ begin
     HEX4 <= not hex5_hex4(7 downto 0);
     HEX5 <= not hex5_hex4(15 downto 8);
 
-    The_System : component Computer_System port map (
-            -- Global signals
-            system_pll_ref_clk_clk    => CLOCK_50,
+    The_System : component Computer_System
+        port map (
+            system_pll_ref_clk_clk     => CLOCK_50,
             system_pll_ref_reset_reset => '0',
-            video_pll_ref_clk_clk     => CLOCK2_50,
-            video_pll_ref_reset_reset => '0',
+            video_pll_ref_clk_clk      => CLOCK2_50,
+            video_pll_ref_reset_reset  => '0',
 
-            -- Arduino GPIO
-            arduino_gpio_export       => ARDUINO_IO,
+            arduino_gpio_export        => ARDUINO_IO,
+            arduino_reset_n_export     => ARDUINO_RESET_N,
 
-            -- Arduino Reset_n
-            arduino_reset_n_export    => ARDUINO_RESET_N,
+            slider_switches_export     => SW,
+            pushbuttons_export         => not KEY(1 downto 0),
+            leds_export                => LEDR,
 
-            -- Slider Switches
-            slider_switches_export    => SW,
+            hex3_hex0_export           => hex3_hex0,
+            hex5_hex4_export           => hex5_hex4,
 
-            -- Pushbuttons
-            pushbuttons_export        => not KEY(1 downto 0),
-				
-            -- LEDs
-            leds_export               => LEDR,
+            vga_CLK                    => open,
+            vga_BLANK                  => open,
+            vga_SYNC                   => open,
+            vga_HS                     => VGA_HS,
+            vga_VS                     => VGA_VS,
+            vga_R                      => VGA_R,
+            vga_G                      => VGA_G,
+            vga_B                      => VGA_B,
 
-            -- Seven Segments
-            hex3_hex0_export          => hex3_hex0,
-            hex5_hex4_export          => hex5_hex4,
+            sdram_clk_clk              => DRAM_CLK,
+            sdram_addr                 => DRAM_ADDR,
+            sdram_ba                   => DRAM_BA,
+            sdram_cas_n                => DRAM_CAS_N,
+            sdram_cke                  => DRAM_CKE,
+            sdram_cs_n                 => DRAM_CS_N,
+            sdram_dq                   => DRAM_DQ,
+            sdram_dqm                  => sdram_dqm,
+            sdram_ras_n                => DRAM_RAS_N,
+            sdram_we_n                 => DRAM_WE_N,
 
-            -- VGA Subsystem
-            vga_CLK                   => open,
-            vga_BLANK                 => open,
-            vga_SYNC                  => open,
-            vga_HS                    => VGA_HS,
-            vga_VS                    => VGA_VS,
-            vga_R                     => VGA_R,
-            vga_G                     => VGA_G,
-            vga_B                     => VGA_B,
-
-            -- SDRAM
-            sdram_clk_clk             => DRAM_CLK,
-            sdram_addr                => DRAM_ADDR,
-            sdram_ba                  => DRAM_BA,
-            sdram_cas_n               => DRAM_CAS_N,
-            sdram_cke                 => DRAM_CKE,
-            sdram_cs_n                => DRAM_CS_N,
-            sdram_dq                  => DRAM_DQ,
-            sdram_dqm                 => sdram_dqm, 
-            sdram_ras_n               => DRAM_RAS_N,
-            sdram_we_n                => DRAM_WE_N,
-			
-			uart_out_readdata          => telemetre_readdata,
+            uart_out_readdata          => telemetre_readdata,
             uart_out_echo              => telemetre_echo,
-            uart_out_trig              => telemetre_trig
+            uart_out_trig              => telemetre_trig,
+
+            servo_out_commande         => servo_commande
         );
 		
 		GPIO(1) <= telemetre_trig;
 		telemetre_echo <= GPIO(3);
+		
+		GPIO(0) <= servo_commande;
 
 end architecture;
 

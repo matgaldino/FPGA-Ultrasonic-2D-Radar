@@ -30,6 +30,7 @@
 		.vga_G                      (<connected-to-vga_G>),                      //                     .G
 		.vga_B                      (<connected-to-vga_B>),                      //                     .B
 		.video_pll_ref_clk_clk      (<connected-to-video_pll_ref_clk_clk>),      //    video_pll_ref_clk.clk
-		.video_pll_ref_reset_reset  (<connected-to-video_pll_ref_reset_reset>)   //  video_pll_ref_reset.reset
+		.video_pll_ref_reset_reset  (<connected-to-video_pll_ref_reset_reset>),  //  video_pll_ref_reset.reset
+		.servo_out_commande         (<connected-to-servo_out_commande>)          //            servo_out.commande
 	);
 

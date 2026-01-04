@@ -81,7 +81,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  31 .jdi          000080a5  00000000  00000000  0006e4f3  2**0
                   CONTENTS, READONLY
- 32 .sopcinfo     000f715f  00000000  00000000  00076598  2**0
+ 32 .sopcinfo     00100281  00000000  00000000  00076598  2**0
                   CONTENTS, READONLY
 SYMBOL TABLE:
 00000000 l    d  .entry	00000000 .entry
@@ -996,7 +996,7 @@ int main(void)
         /* 1) Read the Avalon peripheral (LSBs contain distance in cm). */
         const uint32_t raw_value   = IORD_32DIRECT(TELEMETRE_0_BASE, 0);
      2fc:	00810034 	movhi	r2,1024
-     300:	10800104 	addi	r2,r2,4
+     300:	10800204 	addi	r2,r2,8
      304:	10800037 	ldwio	r2,0(r2)
      308:	e0bffb15 	stw	r2,-20(fp)
         uint32_t distance_cm       = raw_value & 0x3FFu;   /* [9:0] */

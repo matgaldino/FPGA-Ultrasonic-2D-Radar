@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Jan 4, 2026 2:44:35 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1767534275677</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Jan 4, 2026 6:57:12 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1767549432990</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Labs\systemes\PROJETO_FINAL\FPGA-Ultrasonic-2D-Radar\Projets\DE10_Lite_Computer_YD\software\vga_radar_bsp</BspGeneratedLocation>
         <BspSettingsFile>C:\Labs\systemes\PROJETO_FINAL\FPGA-Ultrasonic-2D-Radar\Projets\DE10_Lite_Computer_YD\software\vga_radar_bsp\settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\Computer_System.sopcinfo</SopcDesignFile>
@@ -920,6 +920,12 @@
                 <slaveDescriptor>telemetre_0</slaveDescriptor>
                 <addressRange>0x04000008 - 0x0400000B</addressRange>
                 <addressSpan>4</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>uart_0</slaveDescriptor>
+                <addressRange>0x04000010 - 0x0400001F</addressRange>
+                <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>

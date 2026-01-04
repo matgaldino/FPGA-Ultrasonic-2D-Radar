@@ -4,7 +4,7 @@
  * Machine generated for CPU 'Nios2' in SOPC Builder design 'Computer_System'
  * SOPC Builder design path: ../../Computer_System.sopcinfo
  *
- * Generated: Sun Jan 04 14:44:36 CET 2026
+ * Generated: Sun Jan 04 18:57:13 CET 2026
  */
 
 /*
@@ -209,6 +209,7 @@
 #define __ALTERA_UP_AVALON_VIDEO_RGB_RESAMPLER
 #define __SERVOMOTEUR
 #define __TELEMETRE
+#define __UART
 
 
 /*
@@ -496,7 +497,7 @@
 #define SYSID_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_NAME "/dev/SysID"
 #define SYSID_SPAN 8
-#define SYSID_TIMESTAMP 1767381182
+#define SYSID_TIMESTAMP 1767548582
 #define SYSID_TYPE "altera_avalon_sysid_qsys"
 
 
@@ -644,5 +645,19 @@
 #define TELEMETRE_0_NAME "/dev/telemetre_0"
 #define TELEMETRE_0_SPAN 4
 #define TELEMETRE_0_TYPE "telemetre"
+
+
+/*
+ * uart_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_uart_0 uart
+#define UART_0_BASE 0x4000010
+#define UART_0_IRQ -1
+#define UART_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define UART_0_NAME "/dev/uart_0"
+#define UART_0_SPAN 16
+#define UART_0_TYPE "uart"
 
 #endif /* __SYSTEM_H_ */

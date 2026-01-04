@@ -2,19 +2,15 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
-
 entity DE10_Lite_Computer is
     Port (
-        -- Clock pins
         CLOCK_50          : in  std_logic;
         CLOCK2_50         : in  std_logic;
         CLOCK_ADC_10      : in  std_logic;
 
-        -- ARDUINO
         ARDUINO_IO        : inout std_logic_vector(15 downto 0);
         ARDUINO_RESET_N   : inout std_logic;
 
-        -- SDRAM
         DRAM_ADDR         : out std_logic_vector(12 downto 0);
         DRAM_BA           : out std_logic_vector(1 downto 0);
         DRAM_CAS_N        : out std_logic;
@@ -27,17 +23,14 @@ entity DE10_Lite_Computer is
         DRAM_UDQM         : out std_logic;
         DRAM_WE_N         : out std_logic;
 
-        -- Accelerometer
         G_SENSOR_CS_N     : out std_logic;
         G_SENSOR_INT      : in  std_logic_vector(2 downto 1);
         G_SENSOR_SCLK     : out std_logic;
         G_SENSOR_SDI      : inout std_logic;
         G_SENSOR_SDO      : inout std_logic;
 
-        -- 40-Pin Headers
         GPIO              : inout std_logic_vector(35 downto 0);
 
-        -- Seven Segment Displays
         HEX0              : out std_logic_vector(7 downto 0);
         HEX1              : out std_logic_vector(7 downto 0);
         HEX2              : out std_logic_vector(7 downto 0);
@@ -45,16 +38,12 @@ entity DE10_Lite_Computer is
         HEX4              : out std_logic_vector(7 downto 0);
         HEX5              : out std_logic_vector(7 downto 0);
 
-        -- Pushbuttons
         KEY               : in  std_logic_vector(1 downto 0);
 
-        -- LEDs
         LEDR              : out std_logic_vector(9 downto 0);
 
-        -- Slider Switches
         SW                : in  std_logic_vector(9 downto 0);
 
-        -- VGA
         VGA_B             : out std_logic_vector(3 downto 0);
         VGA_G             : out std_logic_vector(3 downto 0);
         VGA_HS            : out std_logic;
@@ -65,67 +54,71 @@ end entity;
 
 architecture Behavioral of DE10_Lite_Computer is
 
-    signal hex3_hex0 : std_logic_vector(31 downto 0);
-    signal hex5_hex4 : std_logic_vector(15 downto 0);
-	signal sdram_dqm : std_logic_vector(1 downto 0);
-	
-	signal telemetre_readdata : std_logic_vector(9 downto 0);
+    signal hex3_hex0  : std_logic_vector(31 downto 0);
+    signal hex5_hex4  : std_logic_vector(15 downto 0);
+    signal sdram_dqm  : std_logic_vector(1 downto 0);
+
+    signal telemetre_readdata : std_logic_vector(9 downto 0);
     signal telemetre_echo     : std_logic;
     signal telemetre_trig     : std_logic;
-	
-	signal servo_commande     : std_logic;
-	 
-	  component Computer_System is
+
+    signal servo_commande     : std_logic;
+
+    signal uart_fpga_rx       : std_logic;
+    signal uart_fpga_tx       : std_logic;
+
+    component Computer_System is
         port (
-            arduino_gpio_export         : inout std_logic_vector(15 downto 0) := (others => 'X'); -- export
-            arduino_reset_n_export      : out   std_logic;                                        -- export
-			
-            hex3_hex0_export            : out   std_logic_vector(31 downto 0);                    -- export
-            hex5_hex4_export            : out   std_logic_vector(15 downto 0);                    -- export
-            leds_export                 : out   std_logic_vector(9 downto 0);                     -- export
-            pushbuttons_export          : in    std_logic_vector(1 downto 0)  := (others => 'X'); -- export
-			
-            sdram_addr                  : out   std_logic_vector(12 downto 0);                    -- addr
-            sdram_ba                    : out   std_logic_vector(1 downto 0);                     -- ba
-            sdram_cas_n                 : out   std_logic;                                        -- cas_n
-            sdram_cke                   : out   std_logic;                                        -- cke
-            sdram_cs_n                  : out   std_logic;                                        -- cs_n
-            sdram_dq                    : inout std_logic_vector(15 downto 0) := (others => 'X'); -- dq
-            sdram_dqm                   : out   std_logic_vector(1 downto 0);                     -- dqm
-            sdram_ras_n                 : out   std_logic;                                        -- ras_n
-            sdram_we_n                  : out   std_logic;                                        -- we_n
-            sdram_clk_clk               : out   std_logic;                                        -- clk
-			
-            slider_switches_export      : in    std_logic_vector(9 downto 0)  := (others => 'X'); -- export
-            system_pll_ref_clk_clk      : in    std_logic                     := 'X';             -- clk
-            system_pll_ref_reset_reset  : in    std_logic                     := 'X';             -- reset
-			
-            vga_CLK                     : out   std_logic;                                        -- CLK
-            vga_HS                      : out   std_logic;                                        -- HS
-            vga_VS                      : out   std_logic;                                        -- VS
-            vga_BLANK                   : out   std_logic;                                        -- BLANK
-            vga_SYNC                    : out   std_logic;                                        -- SYNC
-            vga_R                       : out   std_logic_vector(3 downto 0);                     -- R
-            vga_G                       : out   std_logic_vector(3 downto 0);                     -- G
-            vga_B                       : out   std_logic_vector(3 downto 0);                     -- B
-			
-            video_pll_ref_clk_clk       : in    std_logic                     := 'X';             -- clk
-            video_pll_ref_reset_reset   : in    std_logic                     := 'X';             -- reset
-			
-			uart_out_readdata          	: out   std_logic_vector(9 downto 0);  
-            uart_out_echo              	: in    std_logic := 'X';
-            uart_out_trig              	: out   std_logic;
-			
-			servo_out_commande			: out	std_logic
+            arduino_gpio_export        : inout std_logic_vector(15 downto 0) := (others => 'X');
+            arduino_reset_n_export     : out   std_logic;
+
+            hex3_hex0_export           : out   std_logic_vector(31 downto 0);
+            hex5_hex4_export           : out   std_logic_vector(15 downto 0);
+            leds_export                : out   std_logic_vector(9 downto 0);
+            pushbuttons_export         : in    std_logic_vector(1 downto 0)  := (others => 'X');
+
+            sdram_addr                 : out   std_logic_vector(12 downto 0);
+            sdram_ba                   : out   std_logic_vector(1 downto 0);
+            sdram_cas_n                : out   std_logic;
+            sdram_cke                  : out   std_logic;
+            sdram_cs_n                 : out   std_logic;
+            sdram_dq                   : inout std_logic_vector(15 downto 0) := (others => 'X');
+            sdram_dqm                  : out   std_logic_vector(1 downto 0);
+            sdram_ras_n                : out   std_logic;
+            sdram_we_n                 : out   std_logic;
+            sdram_clk_clk              : out   std_logic;
+
+            servo_out_commande         : out   std_logic;
+
+            slider_switches_export     : in    std_logic_vector(9 downto 0)  := (others => 'X');
+            system_pll_ref_clk_clk     : in    std_logic                     := 'X';
+            system_pll_ref_reset_reset : in    std_logic                     := 'X';
+
+            telemetre_out_readdata     : out   std_logic_vector(9 downto 0);
+            telemetre_out_echo         : in    std_logic                     := 'X';
+            telemetre_out_trig         : out   std_logic;
+
+            vga_CLK                    : out   std_logic;
+            vga_HS                     : out   std_logic;
+            vga_VS                     : out   std_logic;
+            vga_BLANK                  : out   std_logic;
+            vga_SYNC                   : out   std_logic;
+            vga_R                      : out   std_logic_vector(3 downto 0);
+            vga_G                      : out   std_logic_vector(3 downto 0);
+            vga_B                      : out   std_logic_vector(3 downto 0);
+
+            video_pll_ref_clk_clk      : in    std_logic                     := 'X';
+            video_pll_ref_reset_reset  : in    std_logic                     := 'X';
+
+            serial_out_commande_rx     : in    std_logic                     := 'X';
+            serial_out_commande_tx     : out   std_logic
         );
-    end component Computer_System;
-	 
-	 
+    end component;
 
 begin
 
-    DRAM_UDQM <= sdram_dqm(1);   
-	DRAM_LDQM <= sdram_dqm(0);
+    DRAM_UDQM <= sdram_dqm(1);
+    DRAM_LDQM <= sdram_dqm(0);
 
     HEX0 <= not hex3_hex0(7 downto 0);
     HEX1 <= not hex3_hex0(15 downto 8);
@@ -171,19 +164,22 @@ begin
             sdram_ras_n                => DRAM_RAS_N,
             sdram_we_n                 => DRAM_WE_N,
 
-            uart_out_readdata          => telemetre_readdata,
-            uart_out_echo              => telemetre_echo,
-            uart_out_trig              => telemetre_trig,
+            telemetre_out_readdata     => telemetre_readdata,
+            telemetre_out_echo         => telemetre_echo,
+            telemetre_out_trig         => telemetre_trig,
 
-            servo_out_commande         => servo_commande
+            servo_out_commande         => servo_commande,
+
+            serial_out_commande_rx     => uart_fpga_rx,
+            serial_out_commande_tx     => uart_fpga_tx
         );
-		
-		GPIO(1) <= telemetre_trig;
-		telemetre_echo <= GPIO(3);
-		
-		GPIO(0) <= servo_commande;
+
+    GPIO(1) <= telemetre_trig;
+    telemetre_echo <= GPIO(3);
+
+    GPIO(0) <= servo_commande;
+
+    GPIO(2) <= uart_fpga_tx;
+    uart_fpga_rx <= GPIO(4);
 
 end architecture;
-
-
-  

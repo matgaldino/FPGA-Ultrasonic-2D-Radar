@@ -15,12 +15,15 @@
 		.sdram_ras_n                (<connected-to-sdram_ras_n>),                //                     .ras_n
 		.sdram_we_n                 (<connected-to-sdram_we_n>),                 //                     .we_n
 		.sdram_clk_clk              (<connected-to-sdram_clk_clk>),              //            sdram_clk.clk
+		.serial_out_commande_rx     (<connected-to-serial_out_commande_rx>),     //           serial_out.commande_rx
+		.serial_out_commande_tx     (<connected-to-serial_out_commande_tx>),     //                     .commande_tx
+		.servo_out_commande         (<connected-to-servo_out_commande>),         //            servo_out.commande
 		.slider_switches_export     (<connected-to-slider_switches_export>),     //      slider_switches.export
 		.system_pll_ref_clk_clk     (<connected-to-system_pll_ref_clk_clk>),     //   system_pll_ref_clk.clk
 		.system_pll_ref_reset_reset (<connected-to-system_pll_ref_reset_reset>), // system_pll_ref_reset.reset
-		.uart_out_readdata          (<connected-to-uart_out_readdata>),          //             uart_out.readdata
-		.uart_out_echo              (<connected-to-uart_out_echo>),              //                     .echo
-		.uart_out_trig              (<connected-to-uart_out_trig>),              //                     .trig
+		.telemetre_out_readdata     (<connected-to-telemetre_out_readdata>),     //        telemetre_out.readdata
+		.telemetre_out_echo         (<connected-to-telemetre_out_echo>),         //                     .echo
+		.telemetre_out_trig         (<connected-to-telemetre_out_trig>),         //                     .trig
 		.vga_CLK                    (<connected-to-vga_CLK>),                    //                  vga.CLK
 		.vga_HS                     (<connected-to-vga_HS>),                     //                     .HS
 		.vga_VS                     (<connected-to-vga_VS>),                     //                     .VS
@@ -30,7 +33,6 @@
 		.vga_G                      (<connected-to-vga_G>),                      //                     .G
 		.vga_B                      (<connected-to-vga_B>),                      //                     .B
 		.video_pll_ref_clk_clk      (<connected-to-video_pll_ref_clk_clk>),      //    video_pll_ref_clk.clk
-		.video_pll_ref_reset_reset  (<connected-to-video_pll_ref_reset_reset>),  //  video_pll_ref_reset.reset
-		.servo_out_commande         (<connected-to-servo_out_commande>)          //            servo_out.commande
+		.video_pll_ref_reset_reset  (<connected-to-video_pll_ref_reset_reset>)   //  video_pll_ref_reset.reset
 	);
 

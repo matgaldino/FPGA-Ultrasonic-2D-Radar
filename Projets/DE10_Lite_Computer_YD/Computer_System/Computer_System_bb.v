@@ -16,12 +16,15 @@ module Computer_System (
 	sdram_ras_n,
 	sdram_we_n,
 	sdram_clk_clk,
+	serial_out_commande_rx,
+	serial_out_commande_tx,
+	servo_out_commande,
 	slider_switches_export,
 	system_pll_ref_clk_clk,
 	system_pll_ref_reset_reset,
-	uart_out_readdata,
-	uart_out_echo,
-	uart_out_trig,
+	telemetre_out_readdata,
+	telemetre_out_echo,
+	telemetre_out_trig,
 	vga_CLK,
 	vga_HS,
 	vga_VS,
@@ -31,8 +34,7 @@ module Computer_System (
 	vga_G,
 	vga_B,
 	video_pll_ref_clk_clk,
-	video_pll_ref_reset_reset,
-	servo_out_commande);	
+	video_pll_ref_reset_reset);	
 
 	inout	[15:0]	arduino_gpio_export;
 	output		arduino_reset_n_export;
@@ -50,12 +52,15 @@ module Computer_System (
 	output		sdram_ras_n;
 	output		sdram_we_n;
 	output		sdram_clk_clk;
+	input		serial_out_commande_rx;
+	output		serial_out_commande_tx;
+	output		servo_out_commande;
 	input	[9:0]	slider_switches_export;
 	input		system_pll_ref_clk_clk;
 	input		system_pll_ref_reset_reset;
-	output	[9:0]	uart_out_readdata;
-	input		uart_out_echo;
-	output		uart_out_trig;
+	output	[9:0]	telemetre_out_readdata;
+	input		telemetre_out_echo;
+	output		telemetre_out_trig;
 	output		vga_CLK;
 	output		vga_HS;
 	output		vga_VS;
@@ -66,5 +71,4 @@ module Computer_System (
 	output	[3:0]	vga_B;
 	input		video_pll_ref_clk_clk;
 	input		video_pll_ref_reset_reset;
-	output		servo_out_commande;
 endmodule

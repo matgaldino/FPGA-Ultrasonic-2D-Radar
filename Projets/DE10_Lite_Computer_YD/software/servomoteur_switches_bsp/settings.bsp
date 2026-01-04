@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Jan 3, 2026 4:25:07 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1767453907605</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Jan 4, 2026 6:53:53 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1767549233174</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Labs\systemes\PROJETO_FINAL\FPGA-Ultrasonic-2D-Radar\Projets\DE10_Lite_Computer_YD\software\servomoteur_switches_bsp</BspGeneratedLocation>
         <BspSettingsFile>C:\Labs\systemes\PROJETO_FINAL\FPGA-Ultrasonic-2D-Radar\Projets\DE10_Lite_Computer_YD\software\servomoteur_switches_bsp\settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\Computer_System.sopcinfo</SopcDesignFile>
@@ -920,6 +920,12 @@
                 <slaveDescriptor>telemetre_0</slaveDescriptor>
                 <addressRange>0x04000008 - 0x0400000B</addressRange>
                 <addressSpan>4</addressSpan>
+                <attributes/>
+        </MemoryMap>
+        <MemoryMap>
+                <slaveDescriptor>uart_0</slaveDescriptor>
+                <addressRange>0x04000010 - 0x0400001F</addressRange>
+                <addressSpan>16</addressSpan>
                 <attributes/>
         </MemoryMap>
         <MemoryMap>

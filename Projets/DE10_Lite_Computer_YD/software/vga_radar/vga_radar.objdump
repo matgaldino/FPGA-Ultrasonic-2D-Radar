@@ -81,7 +81,7 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
  31 .jdi          000080a5  00000000  00000000  000765db  2**0
                   CONTENTS, READONLY
- 32 .sopcinfo     00104511  00000000  00000000  0007e680  2**0
+ 32 .sopcinfo     00100281  00000000  00000000  0007e680  2**0
                   CONTENTS, READONLY
 SYMBOL TABLE:
 00000000 l    d  .entry	00000000 .entry
@@ -22712,7 +22712,7 @@ alt_exception_cause_generated_bad_addr(alt_exception_cause cause)
    12cdc:	d9400015 	stw	r5,0(sp)
    12ce0:	d9800115 	stw	r6,4(sp)
    12ce4:	d9c00215 	stw	r7,8(sp)
-   12ce8:	00000000 	call	0 <__alt_mem_SDRAM>
+   12ce8:	00000000 	call	0 <__reset>
    12cec:	d9400017 	ldw	r5,0(sp)
    12cf0:	d9800117 	ldw	r6,4(sp)
    12cf4:	d9c00217 	ldw	r7,8(sp)
@@ -22796,7 +22796,7 @@ alt_exception_cause_generated_bad_addr(alt_exception_cause cause)
    12e24:	10003226 	beq	r2,zero,12ef0 <__call_exitprocs+0x178>
    12e28:	a009883a 	mov	r4,r20
    12e2c:	98800015 	stw	r2,0(r19)
-   12e30:	00000000 	call	0 <__alt_mem_SDRAM>
+   12e30:	00000000 	call	0 <__reset>
    12e34:	9d000017 	ldw	r20,0(r19)
    12e38:	a03fe41e 	bne	r20,zero,12dcc <__alt_mem_VGA_Subsystem_Char_Buf_Subsystem_Onchip_SRAM+0xf7012dcc>
    12e3c:	dfc00a17 	ldw	ra,40(sp)

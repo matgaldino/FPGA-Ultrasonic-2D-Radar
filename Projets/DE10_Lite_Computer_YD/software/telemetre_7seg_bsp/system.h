@@ -4,7 +4,7 @@
  * Machine generated for CPU 'Nios2' in SOPC Builder design 'Computer_System'
  * SOPC Builder design path: ../../Computer_System.sopcinfo
  *
- * Generated: Fri Jan 02 15:16:02 CET 2026
+ * Generated: Sun Jan 04 18:51:40 CET 2026
  */
 
 /*
@@ -207,7 +207,9 @@
 #define __ALTERA_NIOS_CUSTOM_INSTR_FLOATING_POINT
 #define __ALTERA_UP_AVALON_VIDEO_DMA_CONTROLLER
 #define __ALTERA_UP_AVALON_VIDEO_RGB_RESAMPLER
+#define __SERVOMOTEUR
 #define __TELEMETRE
+#define __UART
 
 
 /*
@@ -495,7 +497,7 @@
 #define SYSID_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define SYSID_NAME "/dev/SysID"
 #define SYSID_SPAN 8
-#define SYSID_TIMESTAMP 1767362682
+#define SYSID_TIMESTAMP 1767548582
 #define SYSID_TYPE "altera_avalon_sysid_qsys"
 
 
@@ -618,16 +620,44 @@
 
 
 /*
+ * servomoteur_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_servomoteur_0 servomoteur
+#define SERVOMOTEUR_0_BASE 0x4000004
+#define SERVOMOTEUR_0_IRQ -1
+#define SERVOMOTEUR_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define SERVOMOTEUR_0_NAME "/dev/servomoteur_0"
+#define SERVOMOTEUR_0_SPAN 4
+#define SERVOMOTEUR_0_TYPE "servomoteur"
+
+
+/*
  * telemetre_0 configuration
  *
  */
 
 #define ALT_MODULE_CLASS_telemetre_0 telemetre
-#define TELEMETRE_0_BASE 0x4000004
+#define TELEMETRE_0_BASE 0x4000008
 #define TELEMETRE_0_IRQ -1
 #define TELEMETRE_0_IRQ_INTERRUPT_CONTROLLER_ID -1
 #define TELEMETRE_0_NAME "/dev/telemetre_0"
 #define TELEMETRE_0_SPAN 4
 #define TELEMETRE_0_TYPE "telemetre"
+
+
+/*
+ * uart_0 configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_uart_0 uart
+#define UART_0_BASE 0x4000010
+#define UART_0_IRQ -1
+#define UART_0_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define UART_0_NAME "/dev/uart_0"
+#define UART_0_SPAN 16
+#define UART_0_TYPE "uart"
 
 #endif /* __SYSTEM_H_ */

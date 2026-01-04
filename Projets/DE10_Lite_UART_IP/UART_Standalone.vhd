@@ -8,7 +8,7 @@ entity UART_Standalone is
     KEY      : in  std_logic_vector(0 downto 0);
 
     GPIO_2   : out std_logic;  -- uart_tx
-    GPIO_4   : in  std_logic   -- uart_rx (não usado no TX-only)
+    GPIO_4   : in  std_logic   -- uart_rx
   );
 end entity;
 
@@ -24,25 +24,13 @@ architecture rtl of UART_Standalone is
   signal rx_valid : std_logic;
   signal rx_ack   : std_logic := '0';
 
-  constant MSG_LEN : integer := 7;
-  type msg_t is array (0 to MSG_LEN-1) of std_logic_vector(7 downto 0);
-  constant MSG : msg_t := (
-    x"48", -- H
-    x"45", -- E
-    x"4C", -- L
-    x"4C", -- L
-    x"4F", -- O
-    x"0D", -- \r
-    x"0A"  -- \n
-  );
+  signal rx_valid_d : std_logic := '0';
+  signal rx_event   : std_logic := '0';
 
-  signal msg_idx : integer range 0 to MSG_LEN-1 := 0;
-
-  constant GAP_CYCLES : integer := 50_000_000; -- 1s @ 50 MHz
-  signal gap_cnt : integer range 0 to GAP_CYCLES := 0;
-
-  type st_t is (S_IDLE, S_LOAD, S_PULSE, S_WAIT_BUSY, S_GAP);
+  type st_t is (S_IDLE, S_LOAD, S_PULSE, S_WAIT_TX);
   signal st : st_t := S_IDLE;
+
+  signal byte_latched : std_logic_vector(7 downto 0) := (others => '0');
 
 begin
 
@@ -73,47 +61,49 @@ begin
   begin
     if rising_edge(CLOCK_50) then
       if reset_n = '0' then
-        tx_start <= '0';
-        tx_data  <= (others => '0');
-        rx_ack   <= '0';
-        msg_idx  <= 0;
-        gap_cnt  <= 0;
-        st       <= S_IDLE;
+        rx_valid_d <= '0';
+      else
+        rx_valid_d <= rx_valid;
+      end if;
+    end if;
+  end process;
+
+  rx_event <= '1' when (rx_valid = '1' and rx_valid_d = '0') else '0';
+
+  process(CLOCK_50)
+  begin
+    if rising_edge(CLOCK_50) then
+      if reset_n = '0' then
+        tx_start     <= '0';
+        tx_data      <= (others => '0');
+        rx_ack       <= '0';
+        byte_latched <= (others => '0');
+        st           <= S_IDLE;
       else
         tx_start <= '0';
         rx_ack   <= '0';
 
         case st is
           when S_IDLE =>
-            msg_idx <= 0;
-            st <= S_LOAD;
+            if rx_event = '1' then
+              byte_latched <= rx_data;
+              rx_ack       <= '1';      -- consome já
+              st           <= S_LOAD;
+            end if;
 
           when S_LOAD =>
             if tx_busy = '0' then
-              tx_data <= MSG(msg_idx);   -- 1) carrega o byte
+              tx_data <= byte_latched;  -- estabiliza 1 ciclo antes do start
               st <= S_PULSE;
             end if;
 
           when S_PULSE =>
-            tx_start <= '1';             -- 2) pulso no ciclo seguinte (tx_data já está estável)
-            st <= S_WAIT_BUSY;
+            tx_start <= '1';
+            st <= S_WAIT_TX;
 
-          when S_WAIT_BUSY =>
+          when S_WAIT_TX =>
             if tx_busy = '0' then
-              if msg_idx = MSG_LEN-1 then
-                gap_cnt <= 0;
-                st <= S_GAP;
-              else
-                msg_idx <= msg_idx + 1;
-                st <= S_LOAD;
-              end if;
-            end if;
-
-          when S_GAP =>
-            if gap_cnt = GAP_CYCLES then
               st <= S_IDLE;
-            else
-              gap_cnt <= gap_cnt + 1;
             end if;
 
         end case;

@@ -38,9 +38,10 @@ architecture rtl of UART_IP is
   signal tx_shift   : std_logic_vector(7 downto 0) := (others => '0');
   signal tx_reg     : std_logic := '1';
 
+  -- RX: vamos usar contador que pode ir até (BAUD_DIV + HALF_BAUD)
   type rx_state_t is (RX_S_IDLE, RX_S_START, RX_S_DATA, RX_S_STOP);
   signal rx_state   : rx_state_t := RX_S_IDLE;
-  signal rx_cnt     : integer range 0 to BAUD_DIV-1 := 0;
+  signal rx_cnt     : integer range 0 to BAUD_DIV + HALF_BAUD := 0;
   signal rx_bit_idx : integer range 0 to 7 := 0;
   signal rx_shift   : std_logic_vector(7 downto 0) := (others => '0');
   signal rx_valid_r : std_logic := '0';
@@ -49,6 +50,7 @@ begin
 
   tx <= tx_reg;
 
+  -- RX synchronizer (2 FF)
   process(clk)
   begin
     if rising_edge(clk) then
@@ -62,6 +64,7 @@ begin
     end if;
   end process;
 
+  -- ===================== TX (ok) =====================
   process(clk)
   begin
     if rising_edge(clk) then
@@ -77,7 +80,6 @@ begin
             tx_reg     <= '1';
             tx_cnt     <= 0;
             tx_bit_idx <= 0;
-
             if tx_start = '1' then
               tx_shift <= tx_data;
               tx_cnt   <= 0;
@@ -85,7 +87,7 @@ begin
             end if;
 
           when TX_S_START =>
-            tx_reg <= '0';  -- start bit durante TODO esse estado
+            tx_reg <= '0';
             if tx_cnt = BAUD_DIV-1 then
               tx_cnt     <= 0;
               tx_reg     <= tx_shift(0);
@@ -98,7 +100,6 @@ begin
           when TX_S_DATA =>
             if tx_cnt = BAUD_DIV-1 then
               tx_cnt <= 0;
-
               if tx_bit_idx = 7 then
                 tx_reg   <= '1';
                 tx_state <= TX_S_STOP;
@@ -118,7 +119,6 @@ begin
             else
               tx_cnt <= tx_cnt + 1;
             end if;
-
         end case;
       end if;
     end if;
@@ -126,6 +126,7 @@ begin
 
   tx_busy <= '0' when tx_state = TX_S_IDLE else '1';
 
+  -- ===================== RX (corrigido) =====================
   process(clk)
   begin
     if rising_edge(clk) then
@@ -144,21 +145,20 @@ begin
           when RX_S_IDLE =>
             rx_cnt     <= 0;
             rx_bit_idx <= 0;
-
             if rx_ff1 = '0' then
+              -- caiu: possível start
               rx_cnt   <= 0;
               rx_state <= RX_S_START;
             end if;
 
           when RX_S_START =>
-            if rx_cnt = HALF_BAUD then
-              if rx_ff1 = '0' then
-                rx_cnt     <= 0;
-                rx_bit_idx <= 0;
-                rx_state   <= RX_S_DATA;
-              else
-                rx_state <= RX_S_IDLE;
-              end if;
+            -- esperar 1.5 baud para amostrar no centro do bit0
+            if rx_cnt = (BAUD_DIV + HALF_BAUD - 1) then
+              rx_cnt <= 0;
+              -- amostra bit0 no centro
+              rx_shift(0) <= rx_ff1;
+              rx_bit_idx  <= 1;
+              rx_state    <= RX_S_DATA;
             else
               rx_cnt <= rx_cnt + 1;
             end if;

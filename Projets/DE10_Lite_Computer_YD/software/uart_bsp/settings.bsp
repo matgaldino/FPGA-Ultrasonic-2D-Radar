@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>hal</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>Jan 4, 2026 7:08:35 PM</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1767550115132</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>Jan 4, 2026 8:40:44 PM</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1767555644953</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>C:\Labs\systemes\PROJETO_FINAL\FPGA-Ultrasonic-2D-Radar\Projets\DE10_Lite_Computer_YD\software\uart_bsp</BspGeneratedLocation>
         <BspSettingsFile>C:\Labs\systemes\PROJETO_FINAL\FPGA-Ultrasonic-2D-Radar\Projets\DE10_Lite_Computer_YD\software\uart_bsp\settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\Computer_System.sopcinfo</SopcDesignFile>

@@ -144,6 +144,50 @@ static void clear_char_buffer(void)
     }
 }
 
+static void video_text(int x, int y, const char *text)
+{
+    volatile char *cb = (volatile char *)CHAR_BUF_BASE;
+    int off = (y << 7) + x; // 128 colunas (stride 128)
+
+    while (*text) {
+        cb[off++] = *text++;
+    }
+}
+
+// imprime texto em coordenadas de pixel (converte p/ char: 4x4 px por char)
+static void video_text_px(int x_px, int y_px, const char *text)
+{
+    int x = x_px / 4;
+    int y = y_px / 4;
+    if (x < 0) x = 0;
+    if (y < 0) y = 0;
+    if (x > 127) x = 127;
+    if (y > 59)  y = 59;
+    video_text(x, y, text);
+}
+
+// imprime e "limpa o resto" com espaços (pra atualizar sem sujeira)
+static void video_text_px_pad(int x_px, int y_px, const char *text, int pad_len)
+{
+    char buf[64];
+    int i = 0;
+
+    // copia text
+    while (text[i] && i < (int)sizeof(buf) - 1) {
+        buf[i] = text[i];
+        i++;
+    }
+
+    // completa com espaços até pad_len
+    while (i < pad_len && i < (int)sizeof(buf) - 1) {
+        buf[i++] = ' ';
+    }
+    buf[i] = '\0';
+
+    video_text_px(x_px, y_px, buf);
+}
+
+
 static void video_box(int x1, int y1, int x2, int y2, uint16_t color)
 {
     int base = *(volatile int *)PIXEL_BUF_CTRL_BASE;
@@ -204,6 +248,76 @@ static void draw_arc_cm(int cm, uint16_t c)
     }
 }
 
+static void draw_live_status(uint32_t angle_deg, uint32_t dist_cm)
+{
+    char s1[32], s2[32];
+
+    // exemplo: "Ang: 123"
+    snprintf(s1, sizeof(s1), "Ang:%3u", (unsigned)angle_deg);
+    snprintf(s2, sizeof(s2), "Dst:%3ucm", (unsigned)dist_cm);
+
+    // topo esquerdo
+    video_text_px_pad(4, 4,  s1, 12);
+    video_text_px_pad(4, 16, s2, 12);
+}
+
+static void draw_range_labels(void)
+{
+    int m  = (int)dist_max_cm;
+    int d1 = (m * 1) / 4;
+    int d2 = (m * 2) / 4;
+    int d3 = (m * 3) / 4;
+    if (d1 < 1) d1 = 1;
+
+    // Dmax no topo (centro)
+    {
+        char s[32];
+        snprintf(s, sizeof(s), "Dmax:%ucm", (unsigned)m);
+        video_text_px_pad(cx - 40, 4, s, 16);
+    }
+
+    // Eixo X: somente 1/4, 1/2, 3/4 (sem o máximo)
+    int marks[3] = { d1, d2, d3 };
+
+    // linha um pouquinho abaixo do eixo
+    int y_px = cy + 6;
+
+    for (int i = 0; i < 3; i++) {
+        int r = cm_to_px(marks[i]);
+
+        char s[8];
+        snprintf(s, sizeof(s), "%d", marks[i]);
+
+        // largura em pixels aproximada do texto no char buffer:
+        // 1 char ~ 4 px (porque usamos /4)
+        int len = 0;
+        while (s[len]) len++;
+        int text_w_px = len * 4;
+
+        // quer posicionar o texto centralizado na marca:
+        // x_center - metade da largura
+        int x_right = (cx + r) - (text_w_px / 2);
+        int x_left  = (cx - r) - (text_w_px / 2);
+
+        // clamp para não sair da tela (deixa 1 char de margem)
+        int min_x = 4; // 1 char
+        int max_x = SCREEN_W - text_w_px - 4;
+
+        if (x_right < min_x) x_right = min_x;
+        if (x_right > max_x) x_right = max_x;
+
+        if (x_left < min_x) x_left = min_x;
+        if (x_left > max_x) x_left = max_x;
+
+        // escreve nos dois lados
+        video_text_px_pad(x_right, y_px, s, 5);
+        video_text_px_pad(x_left,  y_px, s, 5);
+    }
+}
+
+
+
+
 static void draw_static(void)
 {
     video_box(0, 0, SCREEN_W - 1, SCREEN_H - 1, BLACK);
@@ -222,6 +336,7 @@ static void draw_static(void)
 
     draw_line(0, cy, SCREEN_W - 1, cy, BLUE);
     draw_line(cx, 0, cx, SCREEN_H - 1, BLUE);
+    draw_range_labels();
 }
 
 static void print_help(void)
@@ -404,6 +519,8 @@ static void run_step(uint32_t *angle, int *dir)
     uint32_t raw = IORD_32DIRECT(TELEMETRE_0_BASE, 0);
     uint32_t dist = raw & 0x3FFu;
     if (dist > dist_max_cm) dist = dist_max_cm;
+
+    draw_live_status(*angle, dist);
 
     double rad = (double)(*angle) * PI / 180.0;
     int r_obj = cm_to_px((int)dist);

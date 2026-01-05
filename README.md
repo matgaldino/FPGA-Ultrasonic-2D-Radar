@@ -4,7 +4,7 @@
   <img src="Images/VGA_grafico.jpg" alt="Radar 2D VGA" width="800">
 </p>
 
-🎥 **Démonstration vidéo** : [Voir la vidéo](Images/20260103_174610.mp4)
+🎥 **Démonstration vidéo** : [Voir la vidéo](https://drive.google.com/file/d/1671gZXqpNOm7ePOeZDkDI1RWoT3RkAhV/view?usp=sharing)
 
 Ce dépôt présente la conception et la réalisation d’un **radar ultrason 2D** basé sur une architecture **SoC-FPGA**, développé sur la carte **DE10-Lite** autour du processeur **Nios II**.  
 Le projet a été réalisé dans le cadre de la formation **Polytech Sorbonne Université**.

@@ -7,7 +7,7 @@
 🎥 **Démonstration vidéo** : [Voir la vidéo](https://drive.google.com/file/d/1671gZXqpNOm7ePOeZDkDI1RWoT3RkAhV/view?usp=sharing)
 
 Ce dépôt présente la conception et la réalisation d’un **radar ultrason 2D** basé sur une architecture **SoC-FPGA**, développé sur la carte **DE10-Lite** autour du processeur **Nios II**.  
-Le projet a été réalisé dans le cadre de la formation **Polytech Sorbonne Université**.
+Le projet a été réalisé dans le cadre de la formation **Polytech Sorbonne**.
 
 Le système combine :
 - un **télémètre ultrason HC-SR04** pour la mesure de distance ;
@@ -113,7 +113,7 @@ Le rapport complet du projet est disponible dans ce dépôt :
 ## Auteur
 
 - **Matheus Galdino**  
-  Polytech Sorbonne Université  
+  Polytech Sorbonne
   📧 matheusgaldino2011@gmail.com
 
 ---

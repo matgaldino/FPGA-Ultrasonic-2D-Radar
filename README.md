@@ -1,7 +1,7 @@
 # FPGA-Ultrasonic-2D-Radar
 
 <p align="center">
-  <img src="Images/VGA_grafico.jpg" alt="Radar 2D VGA" width="800">
+  <img src="Images/Final.jpg" alt="Radar 2D VGA" width="800">
 </p>
 
 🎥 **Démonstration vidéo** : [Voir la vidéo](https://drive.google.com/file/d/1671gZXqpNOm7ePOeZDkDI1RWoT3RkAhV/view?usp=sharing)
